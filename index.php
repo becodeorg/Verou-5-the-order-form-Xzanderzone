@@ -25,8 +25,8 @@ function whatIsHappening()
 
 //  provide some products (you may overwrite the example)
 $products = [
-    ['name' => 'Your least favourite drink', 'price' => 2.5],
-    ['name' => 'Your favourite drink', 'price' => 25],
+    ['name' => 'favouriteDrink', 'price' => 2.5],
+    ['name' => 'leastFavouriteDrink', 'price' => 25],
 ];
 
 
@@ -37,15 +37,20 @@ function validate()
     $invalidFields = [];
     // This function will send a list of invalid fields back
     foreach ($_POST as $key => $value) {
-        setcookie($key, $value, time() + 3600, '/');
+        $_COOKIE[$key] = $value;
         if ($value == '') {
+            setcookie($key, '', time() + 3600, '/');
             $invalidFields[] = 'required field: ' . $key . '<br>';
             continue;
+        } else if ($key = 'products') {
         } else {
+            setcookie($key, test_input($value), time() + 3600, '/');
             if ($key == 'zipcode')
                 preg_match("/^[1-9]{1}[0-9]{3}$/i", $value) ?: $invalidFields[] = 'invalid zipcode';
             else if ($key == 'email')
                 filter_var($value, FILTER_VALIDATE_EMAIL) ?: $invalidFields[] = 'The email address is incorrect';
+            else if ($key == 'street' && strlen($value) < 4)
+                $invalidFields[] = 'address is too short!';
         }
     }
     return $invalidFields;
@@ -55,6 +60,7 @@ function test_input($data)
     $data = trim($data);
     $data = stripslashes($data);
     $data = htmlspecialchars($data);
+    $data = filter_var($data, FILTER_SANITIZE_STRING); //does nothing? depricated?
     return $data;
 }
 function handleForm()
@@ -71,12 +77,22 @@ function handleForm()
         }
     } else {
         // handle successful submission
-        echo '<h2 style="background-color:green">Order submitted! Adress: ' . $_POST["street"] . $_POST["streetnumber"] . ', '
-            . $_POST['zipcode'] . ' ' . $_POST["city"] . ', confirmation email will be sent to: ' . $_POST["email"] . '</h2>';
+        global $products;
+        $total = 0;
+        echo '<p style="background-color:green">Order submitted!<br> Ordered items:<br>';
+        if (isset($_POST["products"])) {
+            foreach ($_POST["products"] as $item => $uselessweirdphpthing) {
+                echo $products[$item]['name'] . '   ' . $products[$item]['price'] . "$<br>";
+                $total += $products[$item]['price'];
+            }
+            echo '<br>Total Value: ' . $total . '$<br>';
+        }
+        echo ' <br>' . ' Adress: ' . $_POST["street"] . $_POST["streetnumber"] . ', ' . $_POST['zipcode'] . ' ' . $_POST["city"] . ',<br>
+        confirmation email will be sent to: ' . $_POST["email"] . '</p>';
+
     }
 }
 
-// if (!empty($_POST)) {
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     handleForm();
 }
