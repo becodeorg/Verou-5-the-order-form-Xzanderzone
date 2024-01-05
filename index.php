@@ -22,8 +22,9 @@ function whatIsHappening()
     var_dump($_SESSION);
     echo '</pre>';
 }
+$products = [];
 
-$products = [
+$products_cocktail = [
     ['name' => 'batman', 'price' => 10],
     ['name' => 'team rocket', 'price' => 18],
     ['name' => 'baby yoda', 'price' => 10],
@@ -44,15 +45,22 @@ $products_soft = [
     ['name' => 'water', 'price' => 1],
 ];
 $products_food = [
-    ['name' => 'pizza small', 'price' => 2.5],
-    ['name' => 'pizza medium', 'price' => 10],
-    ['name' => 'nachos', 'price' => 10],
+    ['name' => 'pizza small', 'price' => 9],
+    ['name' => 'pizza medium', 'price' => 15],
+    ['name' => 'nachos', 'price' => 5],
     ['name' => 'jonasis least favorite food', 'price' => 10],
     ['name' => 'alexes least favorite food', 'price' => 10],
     ['name' => 'basiles favorite food', 'price' => 5],
     ['name' => 'anaises? favorite food', 'price' => 0],
 ];
-
+if (isset($_GET['food'])) {
+    if ($_GET["food"] == 3) //0 doesnt work 
+        $products = $products_cocktail;
+    else if ($_GET["food"] == 1)
+        $products = $products_food;
+    else if ($_GET["food"] == 2)
+        $products = $products_soft;
+}
 
 $totalValue = 0;
 
@@ -100,14 +108,16 @@ function handleForm()
             echo '<p style="color:red"> ' . $problem . '</p>';
         }
     } else {
-        // handle successful submission
         global $products;
+        // handle successful submission
         $total = 0;
         echo '<p style="background-color:green">Order submitted!<br> Ordered items:<br>';
         if (isset($_POST["products"])) {
             foreach ($_POST["products"] as $item => $uselessweirdphpthing) {
-                echo $products[$item]['name'] . '   ' . $products[$item]['price'] . "$<br>";
-                $total += $products[$item]['price'];
+                $price = $products[$item]['price'];
+                $count = $_POST['product_count'][$item];
+                echo $products[$item]['name'] . '   ' . $price . "$      x" . $count . "<br>";
+                $total += $price * $count;
             }
             echo '<br>Total Value: ' . $total . '$<br>';
         }

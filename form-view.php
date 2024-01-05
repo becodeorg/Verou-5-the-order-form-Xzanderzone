@@ -24,10 +24,10 @@
                     <a class="nav-link active" href="?food=1">Order food</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="?food=0">Order cocktails</a>
+                    <a class="nav-link" href="?food=2">Order soft-drinks</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="?food=2">Order soft-drinks</a>
+                    <a class="nav-link" href="?food=3">Order cocktails</a>
                 </li>
             </ul>
         </nav>
@@ -72,17 +72,17 @@
                 <fieldset>
                     <legend>Products</legend>
                     <?php
-                    $selector = '';
-                    if ($_GET["food"] == 1)
+                    $selector = htmlspecialchars($_GET["food"]); //select first load correct after
+                    if ($selector == 1)
                         $selector = $products_food;
-                    else if ($_GET["food"] == 2)
+                    else if ($selector == 2)
                         $selector = $products_soft;
-                    else
+                    else //default
                         $selector = $products;
                     foreach ($selector as $i => $product): ?>
                     <label>
-                        <input type="number" value=1>
-                        <input type="checkbox" value=<?= $product['name'] ?> name="products[<?php echo $i ?>]" />
+                        <input type="number" value=0 name="product_count[<?php echo $i ?>]">
+                        <input type="checkbox" value="1" name="products[<?php echo $i ?>]" />
                         <?php echo $product['name'] ?>
                         -
                         &euro; <?= number_format($product['price'], 2) ?></label><br />
