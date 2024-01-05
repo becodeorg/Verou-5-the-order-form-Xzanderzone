@@ -23,10 +23,34 @@ function whatIsHappening()
     echo '</pre>';
 }
 
-//  provide some products (you may overwrite the example)
 $products = [
-    ['name' => 'favouriteDrink', 'price' => 2.5],
-    ['name' => 'leastFavouriteDrink', 'price' => 25],
+    ['name' => 'batman', 'price' => 10],
+    ['name' => 'team rocket', 'price' => 18],
+    ['name' => 'baby yoda', 'price' => 10],
+    ['name' => 'charmander', 'price' => 10],
+    ['name' => 'tatooine sunset', 'price' => 10],
+    ['name' => 'heimdal', 'price' => 10],
+    ['name' => 'silver surfer', 'price' => 10],
+    ['name' => 'bumblebee', 'price' => 10],
+];
+$products_soft = [
+    ['name' => 'fanta', 'price' => 3],
+    ['name' => 'cola', 'price' => 3],
+    ['name' => 'sprite', 'price' => 3],
+    ['name' => 'butterbeer', 'price' => 6],
+    ['name' => 'mead', 'price' => 9],
+    ['name' => 'coffee', 'price' => 2.5],
+    ['name' => 'ginger tea', 'price' => 3],
+    ['name' => 'water', 'price' => 1],
+];
+$products_food = [
+    ['name' => 'pizza small', 'price' => 2.5],
+    ['name' => 'pizza medium', 'price' => 10],
+    ['name' => 'nachos', 'price' => 10],
+    ['name' => 'jonasis least favorite food', 'price' => 10],
+    ['name' => 'alexes least favorite food', 'price' => 10],
+    ['name' => 'basiles favorite food', 'price' => 5],
+    ['name' => 'anaises? favorite food', 'price' => 0],
 ];
 
 

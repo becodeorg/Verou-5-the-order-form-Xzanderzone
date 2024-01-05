@@ -17,18 +17,20 @@
     <div class="container">
         <h1>Place your order</h1>
         <?php // Navigation for when you need it ?>
-        <?php /*
-<nav>
-<ul class="nav">
-<li class="nav-item">
-<a class="nav-link active" href="?food=1">Order food</a>
-</li>
-<li class="nav-item">
-<a class="nav-link" href="?food=0">Order drinks</a>
-</li>
-</ul>
-</nav>
-*/?>
+
+        <nav>
+            <ul class="nav">
+                <li class="nav-item">
+                    <a class="nav-link active" href="?food=1">Order food</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="?food=0">Order cocktails</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="?food=2">Order soft-drinks</a>
+                </li>
+            </ul>
+        </nav>
         <form method="POST">
             <div class="form-row">
                 <div class="form-group col-md-6">
@@ -69,8 +71,17 @@
                 </fieldset>
                 <fieldset>
                     <legend>Products</legend>
-                <?php foreach ($products as $i => $product): ?>
+                    <?php
+                    $selector = '';
+                    if ($_GET["food"] == 1)
+                        $selector = $products_food;
+                    else if ($_GET["food"] == 2)
+                        $selector = $products_soft;
+                    else
+                        $selector = $products;
+                    foreach ($selector as $i => $product): ?>
                     <label>
+                        <input type="number" value=1>
                         <input type="checkbox" value=<?= $product['name'] ?> name="products[<?php echo $i ?>]" />
                         <?php echo $product['name'] ?>
                         -
