@@ -72,7 +72,7 @@
                 <fieldset>
                     <legend>Products</legend>
                     <?php
-                    $selector = htmlspecialchars($_GET["food"]); //select first load correct after
+                    $selector = isset($_GET['food']) ? htmlspecialchars($_GET["food"]) : 3;
                     if ($selector == 1)
                         $selector = $products_food;
                     else if ($selector == 2)
@@ -81,7 +81,7 @@
                         $selector = $products;
                     foreach ($selector as $i => $product): ?>
                     <label>
-                        <input type="number" value=0 name="product_count[<?php echo $i ?>]">
+                        <input type="number" value="0" name="product_count[<?php echo $i ?>]">
                         <input type="checkbox" value="1" name="products[<?php echo $i ?>]" />
                         <?php echo $product['name'] ?>
                         -

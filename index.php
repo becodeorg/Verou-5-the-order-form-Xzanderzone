@@ -8,7 +8,9 @@ declare(strict_types=1);
 
 // We are going to use session variables so we need to enable sessions
 session_start();
-
+$totalValue = 0;
+isset($_COOKIE['totalValue']) ? $totalValue = (int)$_COOKIE['totalValue'] :
+    setcookie('totalValue', (string)$totalValue, time() + 31536000, '/');
 // Use this function when you need to need an overview of these variables
 function whatIsHappening()
 {
@@ -22,7 +24,6 @@ function whatIsHappening()
     var_dump($_SESSION);
     echo '</pre>';
 }
-$products = [];
 
 $products_cocktail = [
     ['name' => 'batman', 'price' => 10],
@@ -34,6 +35,7 @@ $products_cocktail = [
     ['name' => 'silver surfer', 'price' => 10],
     ['name' => 'bumblebee', 'price' => 10],
 ];
+$products = $products_cocktail;
 $products_soft = [
     ['name' => 'fanta', 'price' => 3],
     ['name' => 'cola', 'price' => 3],
@@ -54,15 +56,15 @@ $products_food = [
     ['name' => 'anaises? favorite food', 'price' => 0],
 ];
 if (isset($_GET['food'])) {
-    if ($_GET["food"] == 3) //0 doesnt work 
+    // echo $_GET['food'];
+    if ($_GET["food"] == 3)
         $products = $products_cocktail;
-    else if ($_GET["food"] == 1)
+    if ($_GET["food"] == 1)
         $products = $products_food;
     else if ($_GET["food"] == 2)
         $products = $products_soft;
 }
 
-$totalValue = 0;
 
 function validate()
 {
@@ -74,7 +76,7 @@ function validate()
             setcookie($key, '', time() + 3600, '/');
             $invalidFields[] = 'required field: ' . $key . '<br>';
             continue;
-        } else if ($key = 'products') {
+        } else if ($key == 'products' || $key== "product_count") {
         } else {
             setcookie($key, test_input($value), time() + 3600, '/');
             if ($key == 'zipcode')
@@ -97,10 +99,7 @@ function test_input($data)
 }
 function handleForm()
 {
-    // form related tasks (step 1)
-
     whatIsHappening();
-    // Validation (step 2)
     $invalidFields = validate();
     if (!empty($invalidFields)) {
         // handle errors
@@ -108,16 +107,21 @@ function handleForm()
             echo '<p style="color:red"> ' . $problem . '</p>';
         }
     } else {
-        global $products;
         // handle successful submission
+        global $products;
+        global $totalValue;
         $total = 0;
         echo '<p style="background-color:green">Order submitted!<br> Ordered items:<br>';
         if (isset($_POST["products"])) {
             foreach ($_POST["products"] as $item => $uselessweirdphpthing) {
                 $price = $products[$item]['price'];
                 $count = $_POST['product_count'][$item];
-                echo $products[$item]['name'] . '   ' . $price . "$      x" . $count . "<br>";
-                $total += $price * $count;
+                if($count>0){
+                    echo $products[$item]['name'] . '   ' . $price . "$      x" . $count . "<br>";
+                    $total += $price * $count;
+                    $totalValue += $total;
+                    setcookie('totalValue', (string)$totalValue, time() + 31536000, '/'); //a year
+                }
             }
             echo '<br>Total Value: ' . $total . '$<br>';
         }
